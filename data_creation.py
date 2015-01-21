@@ -55,6 +55,21 @@ def generate_train_set(minibatch_size, num_minibatches):
 		train_set.append((minibatch,y_vec))
 	return train_set
 
+def generate_train_set_gpu(minibatch_size, num_minibatches):
+	train_set = []
+	base_size = 10
+	for i in xrange(num_minibatches):
+		curr_size = base_size + i
+		true = [string_to_array(x) for x in generate_n_true_samples(minibatch_size/2, curr_size)]
+		false = [string_to_array(x) for x in generate_n_false_samples(minibatch_size/2,curr_size)]
+		concat = true+false
+		minibatch = np.array(concat)
+		y_vec = np.zeros(minibatch_size)
+		for i in range(minibatch_size/2):
+			y_vec[i] = 1
+		train_set.append((np.array(minibatch,dtype='float32'),np.array(y_vec,dtype='float32')))
+	return train_set
+
 
 
 if __name__ == '__main__':
