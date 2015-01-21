@@ -1,8 +1,14 @@
 from models import *
 from data_creation import *
 import time
+import theano
+
+
 # dfa = theanoDFA(15, len(total))
-ts = generate_train_set(10000,10)
+if theano.config.floatX == 'float32':
+	ts = generate_train_set_gpu(10000,10)
+else:
+	ts = generate_train_set(10000,10)
 dfa= theanoDFA(15,len(total),init=2)
 for epoch in xrange(200):
 	tic = time.time()
