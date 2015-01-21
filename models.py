@@ -70,9 +70,9 @@ class theanoDFA(object):
         # fixed params
         self.num_states = num_states
         self.alphabet_size = alphabet_size
-        self.clip_threshold = theano.shared(clip_threshold,dtype=theano.config.floatX)
-        self.momentum=theano.shared(momentum,dtype=theano.config.floatX)
-        self.lr = theano.shared(lr,dtype=theano.config.floatX)
+        self.clip_threshold = clip_threshold
+        self.momentum=momentum
+        self.lr = lr
 
         # build funcs
         self.functions()
@@ -206,7 +206,7 @@ class theanoDFA(object):
         updates = []
         for param, gparam in zip(self.params, gparams):
             weight_update = self.updates[param]
-            upd = T.cast(self.momentum * weight_update - self.lr * gparam,dtype=theano.config.floatX)
+            upd = self.momentum * weight_update - self.lr * gparam
             updates.append((weight_update, upd))
             updates.append((param, param + upd))
         gparams.append(T.grad(cost,O))
