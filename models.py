@@ -70,9 +70,9 @@ class theanoDFA(object):
         # fixed params
         self.num_states = num_states
         self.alphabet_size = alphabet_size
-        self.clip_threshold = clip_threshold
-        self.momentum=momentum
-        self.lr = lr
+        self.clip_threshold = theano.shared(clip_threshold,dtype=theano.config.floatX)
+        self.momentum=theano.shared(momentum,dtype=theano.config.floatX)
+        self.lr = theano.shared(lr,dtype=theano.config.floatX)
 
         # build funcs
         self.functions()
