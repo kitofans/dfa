@@ -23,18 +23,6 @@ def initT2(n,m):
 def initV(n):
     return np.random.rand(n) - .5
 
-class dfa(object):
-
-    def __init__(self, num_states, alphabet_size):
-        # T is alphabet_size x num_states x num_states
-        self.T = initT(alphabet_size, num_states)
-        # 1 is the start state
-        self.start_state = np.zeros(num_states)
-        self.start_state[0] = 1
-    def forward(X):
-        # X is seq_size X alphabet_size one-hot representation
-        TT = np.tensordot(X, self.T, 1)
-        # TT is seq_size X num_states x num_states
 
 
 
@@ -52,7 +40,7 @@ class theanoDFA(object):
 
 
         self.L2_sqr = 0
-        self.L2_sqr += (self.WT ** 2).sum()
+        # self.L2_sqr += (self.WT ** 2).sum()
         #self.L2_sqr += (self.state_definition**2).sum()
         
         # scale it
