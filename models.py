@@ -206,7 +206,7 @@ class theanoDFA(object):
         updates = []
         for param, gparam in zip(self.params, gparams):
             weight_update = self.updates[param]
-            upd = self.momentum * weight_update - self.lr * gparam
+            upd = T.cast(self.momentum * weight_update - self.lr * gparam, "float32")
             updates.append((weight_update, upd))
             updates.append((param, param + upd))
         gparams.append(T.grad(cost,O))
