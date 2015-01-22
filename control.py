@@ -11,7 +11,7 @@ if theano.config.floatX == 'float32':
 else:
 	ts = generate_train_set(10000,10)
 dfa= theanoDFA(15,len(total),init=2)
-dfa_2 = theanoDFA(6,len(total),init=2 )
+dfa_2 = theanoDFA(6,len(total),init=2)
 for epoch in xrange(1000):
 	tic = time.time()
 	for X,y in ts:
@@ -20,9 +20,11 @@ for epoch in xrange(1000):
 	toc = time.time()
 	print "Epoch %s took %s seconds." % (str(epoch), str(toc - tic))
 	if (epoch+1) % 100 == 0:
-		pickle.dump(dfa, open('epoch_%s.pkl' % epoch,'w'))
+		pickle.dump(dfa, open('dfa1_epoch_%s.pkl' % epoch,'w'))
+		pickle.dump(dfa_2, open('dfa2_epoch_%s.pkl' % epoch, 'w'))
 
-pickle.dump(dfa, open('epoch_final.pkl','w'))
+pickle.dump(dfa, open('dfa1_epoch_final.pkl','w'))
+pickle.dump(dfa_2, open('dfa2_epoch_final.pkl','w'))
 
 
 	
