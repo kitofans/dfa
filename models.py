@@ -75,7 +75,7 @@ class theanoDFA(object):
         self.lr = lr
 
         # build funcs
-        self.functions()
+        # self.functions()
         self.functions_minibatch()
 
 
@@ -162,67 +162,67 @@ class theanoDFA(object):
 
 
 
-    # def functions(self):
-    #     # instantiate symbolic variables
-    #     X = T.matrix()
-    #     # y is accept or reject; 0 or 1.
-    #     y = T.scalar()
+    def functions(self):
+        # instantiate symbolic variables
+        X = T.matrix()
+        # y is accept or reject; 0 or 1.
+        y = T.scalar()
 
-    #     # ========== [define forward pass] ==========
+        # ========== [define forward pass] ==========
 
-    #     # X is seq_size x alphabet_size
-    #     # self.WT is alphabet_size x num_states x num_states
-    #     # hence transition_tensor is seq_size x num_states x num_states
-    #     transition_tensor = T.tensordot(X, self.WT, 1)
+        # X is seq_size x alphabet_size
+        # self.WT is alphabet_size x num_states x num_states
+        # hence transition_tensor is seq_size x num_states x num_states
+        transition_tensor = T.tensordot(X, self.WT, 1)
 
         
-    #     # we need to define a recurrent function in here
-    #     # state0 is starting state
-    #     state0 = np.zeros(self.num_states)
-    #     state0[0] = 1
+        # we need to define a recurrent function in here
+        # state0 is starting state
+        state0 = np.zeros(self.num_states)
+        state0[0] = 1
 
-    #     def recurrence(T_t, s_tm1):
-    #         '''
-    #         T_t is the transition matrix at this timestep; s_tm1 is the state from the timestep before
-    #         '''
-    #         pdist = T_t / T.sum(T_t,axis=1,keepdims=True)
-    #         s_t = T.dot(s_tm1,pdist)
-    #         return s_t
+        def recurrence(T_t, s_tm1):
+            '''
+            T_t is the transition matrix at this timestep; s_tm1 is the state from the timestep before
+            '''
+            pdist = T_t / T.sum(T_t,axis=1,keepdims=True)
+            s_t = T.dot(s_tm1,pdist)
+            return s_t
 
-    #     S, _ = theano.scan(recurrence, sequences=transition_tensor, outputs_info=state0)
-    #     Sfinal = S[-1]
-    #     # now Sfinal = 1xnum_states
-    #     O = T.nnet.sigmoid(theano.dot(Sfinal, self.state_definition))
-    #     # final is scalar 0-1
-    #     ''' todo: cost; tothink: use sigmoid in order to not require nonnegative components'''
-    #     cost = T.nnet.binary_crossentropy(O, y)
+        S, _ = theano.scan(recurrence, sequences=transition_tensor, outputs_info=state0)
+        Sfinal = S[-1]
+        # now Sfinal = 1xnum_states
+        O = T.nnet.sigmoid(theano.dot(Sfinal, self.state_definition))
+        # final is scalar 0-1
+        ''' todo: cost; tothink: use sigmoid in order to not require nonnegative components'''
+        cost = T.nnet.binary_crossentropy(O, y)
 
-    #     gparams = []
-    #     # nonfiniteg = []
-    #     for param in self.params:
-    #         pre_clip_gparam = T.grad(cost, param)
-    #         # calculate norm
-    #         gparam_norm = T.sqrt(T.sum(pre_clip_gparam**2))
-    #         # switch statement for the clipping
-    #         switchgrad = T.switch(T.ge(gparam_norm, self.clip_threshold), pre_clip_gparam * (self.clip_threshold/gparam_norm), pre_clip_gparam)
-    #         # make sure we have reasonable gradients
-    #         nonfinite = T.or_(T.isnan(switchgrad), T.isinf(switchgrad))
-    #         post_clip_gparam = T.switch(nonfinite, .01 * param, switchgrad)
-    #         gparams.append(post_clip_gparam)
-    #         # nonfiniteg.append(switchgrad)
+        gparams = []
+        # nonfiniteg = []
+        for param in self.params:
+            pre_clip_gparam = T.grad(cost, param)
+            # calculate norm
+            gparam_norm = T.sqrt(T.sum(pre_clip_gparam**2))
+            # switch statement for the clipping
+            switchgrad = T.switch(T.ge(gparam_norm, self.clip_threshold), pre_clip_gparam * (self.clip_threshold/gparam_norm), pre_clip_gparam)
+            # make sure we have reasonable gradients
+            nonfinite = T.or_(T.isnan(switchgrad), T.isinf(switchgrad))
+            post_clip_gparam = T.switch(nonfinite, .01 * param, switchgrad)
+            gparams.append(post_clip_gparam)
+            # nonfiniteg.append(switchgrad)
 
 
 
-    #     updates = []
-    #     for param, gparam in zip(self.params, gparams):
-    #         weight_update = self.updates[param]
-    #         upd = self.momentum * weight_update - self.lr * gparam
-    #         updates.append((weight_update, upd))
-    #         updates.append((param, param + upd))
-    #     gparams.append(T.grad(cost,O))
+        updates = []
+        for param, gparam in zip(self.params, gparams):
+            weight_update = self.updates[param]
+            upd = self.momentum * weight_update - self.lr * gparam
+            updates.append((weight_update, upd))
+            updates.append((param, param + upd))
+        gparams.append(T.grad(cost,O))
 
-    #     self.train = theano.function([X,y], [O,cost], updates=updates)
-    #     self.predict =theano.function([X,y],[O,S,Sfinal,transition_tensor,cost])
+        self.train = theano.function([X,y], [O,cost], updates=updates)
+        self.predict =theano.function([X,y],[O,S,Sfinal,transition_tensor,cost])
 
 
 
