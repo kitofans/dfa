@@ -75,7 +75,7 @@ class theanoDFA(object):
         self.lr = np.cast['float32'](lr)
 
         # build funcs
-        self.functions()
+        # self.functions()
         self.functions_minibatch()
 
 
