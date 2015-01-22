@@ -23,11 +23,11 @@ for epoch in xrange(1000):
 	toc = time.time()
 	print "Epoch %s took %s seconds." % (str(epoch), str(toc - tic))
 	if (epoch+1) % 100 == 0:
-		pickle.dump(dfa, open('dfa1_epoch_%s.pkl' % epoch,'w'))
-		pickle.dump(dfa_2, open('dfa2_epoch_%s.pkl' % epoch, 'w'))
+		pickle.dump(dfa, open('dfa1_epoc_%s.pkl' % epoch,'w'))
+		pickle.dump(dfa_2, open('dfa2_epoc_%s.pkl' % epoch, 'w'))
 
-pickle.dump(dfa, open('dfa1_epoch_final.pkl','w'))
-pickle.dump(dfa_2, open('dfa2_epoch_final.pkl','w'))
+pickle.dump(dfa, open('dfa1_epoc_final.pkl','w'))
+pickle.dump(dfa_2, open('dfa2_epoc_final.pkl','w'))
 
 
 	
