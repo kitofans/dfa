@@ -70,9 +70,9 @@ class theanoDFA(object):
         # fixed params
         self.num_states = num_states
         self.alphabet_size = alphabet_size
-        self.clip_threshold = clip_threshold
-        self.momentum=momentum
-        self.lr = lr
+        self.clip_threshold = np.cast['float32'](clip_threshold)
+        self.momentum=np.cast['float32'](momentum)
+        self.lr = np.cast['float32'](lr)
 
         # build funcs
         self.functions()
@@ -209,7 +209,7 @@ class theanoDFA(object):
             upd = T.cast(self.momentum * weight_update - self.lr * gparam, "float32")
             updates.append((weight_update, upd))
             updates.append((param, param + upd))
-        gparams.append(T.grad(cost,O))
+       
 
         self.train = theano.function([X,y], [O,cost], updates=updates)
         self.predict =theano.function([X,y],[O,S,Sfinal,transition_tensor,cost])
