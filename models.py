@@ -21,7 +21,7 @@ def initT2(n,m):
     return (np.random.rand(n,m,m) * 2) * magic_number
 
 def initV(n):
-    return np.random.rand(n) - .5
+    return np.random.rand(n)
 
 class dfa(object):
 
@@ -53,7 +53,7 @@ class theanoDFA(object):
 
         self.L2_sqr = 0
         self.L2_sqr += (self.WT ** 2).sum()
-        self.L2_sqr += (self.state_definition**2).sum()
+        #self.L2_sqr += (self.state_definition**2).sum()
         
         # scale it
         self.L2_sqr *= regularization
