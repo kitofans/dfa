@@ -4,14 +4,17 @@ import time
 import theano
 import pickle
 
-
+print "Generating train set..."
 # dfa = theanoDFA(15, len(total))
 if theano.config.floatX == 'float32':
 	ts = generate_train_set_gpu(10000,10)
 else:
 	ts = generate_train_set(10000,10)
+print "Initializing dfa 1..."
 dfa= theanoDFA(15,len(total),init=2)
+print "Initializing dfa 2..."
 dfa_2 = theanoDFA(6,len(total),init=2)
+print "Iterating through epochs..."
 for epoch in xrange(1000):
 	tic = time.time()
 	for X,y in ts:
